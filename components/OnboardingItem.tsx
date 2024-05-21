@@ -39,7 +39,6 @@ export default function Onboarding({navigation}:any) {
   return(
     <View style={{flex:1}}>
       
-      <StatusBar hidden/>
       <Animated.FlatList
         ref={flatlistRef}
         data={onboardingData}

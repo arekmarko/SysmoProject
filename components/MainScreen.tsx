@@ -2,6 +2,7 @@ import {StyleSheet, Text, TouchableHighlight, TouchableNativeFeedback, Touchable
 import React, { useEffect, useState } from 'react';
 import Icons from 'react-native-vector-icons/FontAwesome6';
 import Sound from 'react-native-sound';
+import NetInfo, { useNetInfo } from '@react-native-community/netinfo';
 
 const myIcon = <Icons name="play" size={80} color="#fff" />
 Sound.setCategory('Playback');
@@ -23,11 +24,24 @@ music.play((success) => {
   }
 });
 });
+var firstTime = true;
 
 export default function MainScreen({navigation}:any) {
+  const {type, isConnected} = useNetInfo();
   music.setNumberOfLoops(-1);
   music.play();
   const [icon, setIcon] = useState('play');
+
+  useEffect(() => {
+    if(firstTime){
+      navigation.navigate('onboarding');
+      firstTime = false;
+    }
+    if(!isConnected){
+      navigation.navigate('noConnection');
+    }
+  });
+
   const handleStart = () => {
     setTimeout(() => {setIcon('5')}, 0);
     setTimeout(() => {setIcon('4')}, 1000);

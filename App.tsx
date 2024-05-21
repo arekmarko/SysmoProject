@@ -31,7 +31,8 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{headerShown: false, headerLeft: () => null}} initialRouteName='onboarding'>
+      <StatusBar hidden/>
+      <Stack.Navigator screenOptions={{headerShown: false}} initialRouteName='mainScreen'>
         <Stack.Screen name='onboarding' component={Onboarding} />
         <Stack.Screen name='mainScreen' component={MainScreen} />
         <Stack.Screen name='endGame' component={EndGame} />
