@@ -14,6 +14,7 @@ export const music = new Sound('music.mp3', Sound.MAIN_BUNDLE, (error) => {
   console.log('duration in seconds: ' + music.getDuration() + 'number of channels: ' + music.getNumberOfChannels());
 
 // Play the sound with an onEnd callback
+music.stop();
 music.play((success) => {
   if (success) {
     console.log('successfully finished playing');
@@ -22,10 +23,10 @@ music.play((success) => {
   }
 });
 });
-music.setNumberOfLoops(-1);
 
 export default function MainScreen({navigation}:any) {
-  useEffect(() => {music.play();}, []);
+  music.setNumberOfLoops(-1);
+  music.play();
   const [icon, setIcon] = useState('play');
   const handleStart = () => {
     setTimeout(() => {setIcon('5')}, 0);
@@ -45,7 +46,7 @@ export default function MainScreen({navigation}:any) {
       <View style={{alignItems: 'center'}}>
 
       <TouchableOpacity disabled={icon==='play' ? false : true} style={styles.playButton} onPress={() => handleStart()}>
-        <Icons name={icon} size={48} color="#fff" />
+        <Icons name={icon} size={100} color="#fff" />
       </TouchableOpacity>
       </View>
     </View>
@@ -69,7 +70,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#FF961B',
     width: 120,
     height: 120,
-    borderRadius: 100,
+    borderRadius: 60,
+    paddingLeft: 10,
     position: 'absolute',
     alignItems: 'center',
     justifyContent: 'center'

@@ -1,6 +1,8 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, { useEffect, useRef } from 'react';
 import LottieView from 'lottie-react-native';
+import Clipboard from '@react-native-clipboard/clipboard';
+import NetInfo from '@react-native-community/netinfo';
 
 export default function WinScreen({navigation}: any) {
     const animationRef = useRef<LottieView>(null);
@@ -29,6 +31,7 @@ export default function WinScreen({navigation}: any) {
             onPress={() => 
             {
               console.log('Copied to clipboard!');
+              Clipboard.setString('abc');
             }
             }>
             <Text style={{color: 'white', fontSize: 24, fontWeight: '700'}}>
