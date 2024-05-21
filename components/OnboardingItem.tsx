@@ -1,6 +1,7 @@
 import {
   Button,
   FlatList,
+  StatusBar,
   StyleSheet,
   Text,
   TouchableHighlight,
@@ -8,22 +9,24 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import React from 'react';
-import { AnimatedRef, scrollTo } from 'react-native-reanimated';
+import Animated, { AnimatedRef, scrollTo, useAnimatedRef } from 'react-native-reanimated';
 
 type Props = {
   item: any;
   index: number;
   flatlistRef: AnimatedRef<FlatList<any>>;
+  navigation: any;
 };
 
-const OnboardingItem = ({item, index, flatlistRef}: Props) => {
+
+const OnboardingItem = ({item, index, flatlistRef, navigation}: Props) => {
   const {width: SCREEN_WIDTH} = useWindowDimensions();
   return (
     <View style={[styles.itemContainer, {width: SCREEN_WIDTH}]}>
       <Text style={styles.title}>{item.title}</Text>
       <View style={{paddingHorizontal: 200, justifyContent: 'center'}}>
         <Text style={[styles.textButton, {color: 'black', paddingVertical: 20}]}>{item.text}</Text>
-        <TouchableHighlight style={styles.button} onPress={() => index<2 ? flatlistRef.current?.scrollToIndex({index: index+1}) : console.log('Rozpocznij')}>
+        <TouchableHighlight style={styles.button} onPress={() => index<2 ? flatlistRef.current?.scrollToIndex({index: index+1}) :  navigation.navigate("mainScreen")}>
           <Text style={[styles.textButton, {color: 'white'}]}>{index<2 ? 'DALEJ' : 'ROZPOCZNIJ GRĘ'}</Text>
         </TouchableHighlight>
       </View>
@@ -31,7 +34,27 @@ const OnboardingItem = ({item, index, flatlistRef}: Props) => {
   );
 };
 
-export default OnboardingItem;
+export default function Onboarding({navigation}:any) {
+  const flatlistRef = useAnimatedRef<FlatList<any>>();
+  return(
+    <View style={{flex:1}}>
+      
+      <StatusBar hidden/>
+      <Animated.FlatList
+        ref={flatlistRef}
+        data={onboardingData}
+        renderItem={({item,index}) => {
+          return <OnboardingItem item={item} index={index} flatlistRef={flatlistRef} navigation={navigation}/>;
+        }}
+        keyExtractor={item => item.id}
+        scrollEventThrottle={16}
+        horizontal={true}
+        pagingEnabled={true}
+        showsHorizontalScrollIndicator={false}
+      />
+    </View>
+  );
+}
 
 const styles = StyleSheet.create({
   itemContainer: {
@@ -60,3 +83,22 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+
+const onboardingData = [
+  {
+    id: '1',
+    title: 'Onboarding 1',
+    text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam pellentesque orci at nisi maximus dictum. Quisque sem augue, dictum in ipsum vel, aliquet elementum justo.',
+    buttonColor: '#FF961B',
+  },
+  {
+    id: '2',
+    title: 'Onboarding 2',
+    text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam pellentesque orci at nisi maximus dictum. Quisque sem augue, dictum in ipsum vel, aliquet elementum justo.',
+  },
+  {
+    id: '3',
+    title: 'Onboarding 3',
+    text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam pellentesque orci at nisi maximus dictum. Quisque sem augue, dictum in ipsum vel, aliquet elementum justo.',
+  },
+]
