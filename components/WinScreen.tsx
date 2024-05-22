@@ -1,10 +1,11 @@
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, { useEffect, useRef } from 'react';
+import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
 import LottieView from 'lottie-react-native';
 import Clipboard from '@react-native-clipboard/clipboard';
-import NetInfo from '@react-native-community/netinfo';
+import { music } from './MainScreen';
 
 export default function WinScreen({navigation}: any) {
+    const [copyText, setCopyText] = useState('NAGRODA (copy to clipboard)');
     const animationRef = useRef<LottieView>(null);
     useEffect(() => {
         animationRef.current?.play(10,80);
@@ -32,13 +33,15 @@ export default function WinScreen({navigation}: any) {
             {
               console.log('Copied to clipboard!');
               Clipboard.setString('abc');
+              setCopyText('NAGRODA (copied!)');
+              Alert.alert('Skopiowano');
             }
             }>
             <Text style={{color: 'white', fontSize: 24, fontWeight: '700'}}>
-              NAGRODA (copy to clipboard)
+              {copyText}
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('mainScreen')}>
+          <TouchableOpacity onPress={() => {navigation.navigate('mainScreen'), music.play()}}>
             <Text
               style={{fontSize: 24, fontWeight: '700', alignSelf: 'center'}}>
               OPUŚĆ GRĘ
