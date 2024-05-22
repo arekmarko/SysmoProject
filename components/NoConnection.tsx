@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { BackHandler, StyleSheet, Text, View } from 'react-native'
 import React, { useEffect } from 'react'
 import { useNetInfo } from '@react-native-community/netinfo'
 import Icons from 'react-native-vector-icons/Feather';
@@ -10,6 +10,14 @@ export default function NoConnection({navigation}:any) {
         if(isConnected){
             navigation.navigate('mainScreen');
         }
+        const backAction = () => {
+            return true;
+          };
+          const backHandler = BackHandler.addEventListener(
+            'hardwareBackPress',
+            backAction
+          );
+          return () => backHandler.remove();
     })
   return (
     <View style={styles.container}>

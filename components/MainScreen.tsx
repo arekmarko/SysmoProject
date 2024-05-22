@@ -1,15 +1,17 @@
 import {
   Alert,
+  AppState,
   BackHandler,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import Icons from 'react-native-vector-icons/FontAwesome6';
 import Sound from 'react-native-sound';
-import NetInfo, {useNetInfo} from '@react-native-community/netinfo';
+import {useNetInfo} from '@react-native-community/netinfo';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const myIcon = <Icons name="play" size={80} color="#fff" />;
 Sound.setCategory('Playback');
@@ -18,39 +20,41 @@ export const music = new Sound('music.mp3', Sound.MAIN_BUNDLE, error => {
     console.log('failed to load the sound', error);
     return;
   }
-  // loaded successfully
-  console.log(
-    'duration in seconds: ' +
-      music.getDuration() +
-      'number of channels: ' +
-      music.getNumberOfChannels(),
-  );
+
   music.setNumberOfLoops(-1);
   music.play();
 });
 
 export default function MainScreen({navigation}: any) {
-  const [firstTime, setFirstTime] = useState(true);
+  const appState = useRef(AppState.currentState);
   const {isConnected} = useNetInfo();
   const [icon, setIcon] = useState('play');
   const [volume, setVolume] = useState(true);
 
-  useEffect(() => {
-    if (firstTime) {
-      navigation.navigate('onboarding');
-      setFirstTime(false);
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('onboarding');
+      if (value!=null){
+        console.log(value);
+      } else {
+        navigation.navigate('onboarding');
+      }
+    } catch (e) {
+      console.log(e);
     }
+  }
+  useEffect(() => {
+    getData();
     if (!isConnected) {
       navigation.navigate('noConnection');
     }
-    const backAction = () => {
-      return true;
-    };
-    const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      backAction
-    );
-    return () => backHandler.remove();
+    const subscription = AppState.addEventListener('change', nextAppState => {
+      if(nextAppState==='active') {
+        music.play();
+      } else {
+        music.pause();
+      }
+    }) 
   }, []);
 
   const handleStart = () => {

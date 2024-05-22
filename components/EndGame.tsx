@@ -1,8 +1,18 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
+import { BackHandler, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import React, { useEffect } from 'react'
 import { music } from './MainScreen'
 
 export default function EndGame({navigation}:any) {
+  useEffect(() => {
+    const backAction = () => {
+      return true;
+    };
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction
+    );
+    return () => backHandler.remove();
+  });
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Koniec gry</Text>

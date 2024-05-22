@@ -32,9 +32,8 @@ export default function WinScreen({navigation}: any) {
             onPress={() => 
             {
               console.log('Copied to clipboard!');
-              Clipboard.setString('abc');
+              Clipboard.setString('test');
               setCopyText('NAGRODA (copied!)');
-              Alert.alert('Skopiowano');
             }
             }>
             <Text style={{color: 'white', fontSize: 24, fontWeight: '700'}}>
